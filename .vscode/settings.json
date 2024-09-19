@@ -3,5 +3,9 @@
         "activityBar.background": "#6f1111",
         "titleBar.activeBackground": "#9b0d0d",
         "titleBar.activeForeground": "#ffffff"
-    }
+    },
+    "files.associations": {
+        "iostream": "cpp"
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }
