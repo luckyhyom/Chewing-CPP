@@ -6,28 +6,21 @@ class Date {
     int day_;
 
     public:
-        void SetDate(int year, int month, int day) {
+        void AddDay(int inc);
+        void AddMonth(int inc);
+        void AddYear(int inc);
+        void ShowDate();
+        Date() {
+            year_ = 2024;
+            month_ = 1;
+            day_ = 31;
+        }
+        Date(int year, int month, int day) { // 오버로딩 기능이 같은 함수명을 재사용할수있게 해준다.
             year_ = year;
             month_ = month;
             day_ = day;
-        };
-
-        void AddDay(int inc) {
-            for (int i = 0; i < inc; i++) IncreaseDay();
-        };
-
-        void AddMonth(int inc) {
-            for (int i = 0; i < inc; i++) IncreaseMonth();
-        };
-
-        void AddYear(int inc) {
-            for (int i = 0; i < inc; i++) IncreaseYear();
-        };
-
-        void ShowDate() {
-            std::cout << year_ << "/" << month_ << "/" << day_ << std::endl;
         }
-        
+
     private:
         void IncreaseYear() {
             year_ += 1;
@@ -79,9 +72,25 @@ class Date {
         }
 };
 
+void Date:: AddDay(int inc) {
+    for (int i = 0; i < inc; i++) IncreaseDay();
+};
+
+void Date:: AddMonth(int inc) {
+    for (int i = 0; i < inc; i++) IncreaseMonth();
+};
+
+void Date:: AddYear(int inc) {
+    for (int i = 0; i < inc; i++) IncreaseYear();
+};
+
+void Date:: ShowDate() {
+    std::cout << year_ << "/" << month_ << "/" << day_ << std::endl;
+}
+
+
 int main() {
-    Date date; 
-    date.SetDate(2024, 1, 31);
+    Date date = Date(2024,1,31);
     date.ShowDate();
     for (int i = 0; i < 365; i++)
     {
