@@ -10,12 +10,13 @@
 #include <iostream>
 
 class String {
-    char *str;
+    char *str; // 동적인 크기의 데이터는 포인터를 사용해야한다. / 소멸자 필수!
     int length;
 
     public:
         String(char c);
         String(char *string);
+        ~String();
         int get_length() const;
         void concat(char *string);
         int find(char *string);
@@ -35,6 +36,10 @@ String::String(char *string) {
     str = new char[strlen(string) + 1];
     strcpy(str, string);
     length = strlen(string);
+}
+
+String::~String() {
+    delete str[];
 }
 
 int String::get_length() const {
@@ -63,7 +68,7 @@ void String::concat(char *string) {
 
     new_str[new_length] = '\0';
 
-    delete str;
+    delete[] str;
     str = new_str;
     length = new_length;
 }
