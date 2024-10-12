@@ -148,19 +148,28 @@ class Int {
     Array* array;
 
     public:
-        Int(int index, int level = 0, void* data = NULL, Array* array = NULL): level(level), data(data), array(array) {
-            if(index < 0 || index > array->size[level -1]) {
+        Int(int index, int _level = 0, void* _data = NULL, Array* _array = NULL): level(_level), data(_data), array(_array) {
+            std::cout << "?시발" << std::endl;
+            if(level < 0 || index > array->size[level -1]) {
+                std::cout << "?시발!!" << std::endl;
                 data = NULL;
                 return;
             };
             if(level == array->dim) {
-                data = static_cast<int*>(static_cast<Array::Address*>(data)->next) + index;
+                data = static_cast<void*>((static_cast<int*>(static_cast<Array::Address*>(data)->next) + index));
             } else {
-                data = static_cast<Array::Address*>(static_cast<Array::Address*>(data)->next) + index;
+                data = static_cast<void*>(static_cast<Array::Address*>(static_cast<Array::Address*>(data)->next) + index);
             }
-        };
+        }
 
-        Int operator[](int index) {
+        Int(const Int& i) : data(i.data), level(i.level), array(i.array) {}
+        
+        Int& operator=(const int& a) {
+            if (data) *static_cast<int*>(data) = a;
+            return *this;
+        }
+
+        Int operator[](const int index) {
             /*
                 new 유무의 차이..............!
                 new가 있다면
@@ -171,6 +180,8 @@ class Int {
                 1. 스택에 메모리 할당
                 2. 넘길 때.. 지역변수는 데이터가 소멸되는데 괜찮나?
             */
+            std::cout << "?" << std::endl;
+            if(!data) return 0;
             return Int(index, level + 1, data, array);
         }
 
@@ -191,17 +202,21 @@ Int Array::operator[](const int index) {
         1. 스택에 메모리 할당
         2. 넘길 때.. 지역변수는 데이터가 소멸되는데 괜찮나?
     */
+   std::cout << "?Tq" << std::endl;
     return Int(index, 1, static_cast<void*>(top), this);
 }
 }
 
 int main() {
-    int dim = 4;
-    int size[] = {2,2,2,4};
+    int dim = 3;
+    int size[] = {2,3,4};
     MyArray::Array* arr = new MyArray::Array(dim, size);
     MyArray::Array* copy = new MyArray::Array(*arr);
     arr->print_all();
     copy->print_all();
+
+    //int value = arr[1][1][1];
+    std::cout << arr[1][1][1] << "?!" << std::endl;;
     delete arr;
     delete copy;
     return 0;
