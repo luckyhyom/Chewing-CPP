@@ -16,11 +16,11 @@ class Employee {
             rank = emp.rank;
         }
 
-        void print_info() {
+        virtual void print_info() {
             std::cout << name << "(" << position << ", " << age << ") ==> " << calculate_pay() << "만원" << std::endl;
         }
 
-        int calculate_pay() {
+        virtual int calculate_pay() {
             return 200 + rank * 50;
         }
 };
@@ -35,8 +35,8 @@ class Manager : public Employee {
             1. 직급에 따라서 메서드 오버라이딩 (if문으로 처리하지 않아도 된다.)
             2. 직급별로 다른 메서드를 가질 수 있다.
         */
-        int calculate_pay() { return 200 + rank * 50 + 5 * year_of_service; }
-        void print_info() {
+        int calculate_pay() override { return 200 + rank * 50 + 5 * year_of_service; }
+        void print_info() override {
             std::cout << name << " (" << position << " , " << age << ", "
                     << year_of_service << "년차) ==> " << calculate_pay() << "만원"
                     << std::endl;
@@ -45,19 +45,13 @@ class Manager : public Employee {
 
 class EmployeeList {
     int alloc_employee;
-
     int current_employee;
-    int current_manager;
-
     Employee** employee_list;
-    Manager** manager_list;
 
     public:
         EmployeeList(int alloc_employee): alloc_employee(alloc_employee) {
             employee_list = new Employee*[alloc_employee];
-            manager_list = new Manager*[alloc_employee];
             current_employee = 0;
-            current_manager = 0;
         }
 
         void add_emplyee(Employee* emp) {
@@ -71,18 +65,7 @@ class EmployeeList {
             employee_list[current_employee - 1] = emp;
         }
 
-        void add_manager(Manager* mg) {
-            ++current_manager;
-            if(current_manager >= alloc_employee) {
-                Manager** new_manager_list = new Manager*[current_manager * 2];
-                for (int i = 0; i < current_manager; i++) new_manager_list[i] = manager_list[i];
-                delete[] manager_list;
-                manager_list = new_manager_list;
-            }
-            manager_list[current_manager - 1] = mg;
-        }
-
-        int current_emplyee_num() { return current_employee + current_manager; }
+        int current_emplyee_num() { return current_employee; }
         void print_employee_info() {
             int total_pay = 0;
             for (int i = 0; i < current_employee; i++)
@@ -90,13 +73,7 @@ class EmployeeList {
                 employee_list[i]->print_info();
                 total_pay+= employee_list[i]->calculate_pay();
             }
-            
-            for (int i = 0; i < current_manager; i++)
-            {
-                manager_list[i]->print_info();
-                total_pay+= manager_list[i]->calculate_pay();
-            }
-            
+
             std::cout << "total pay: " << total_pay << std::endl;
         }
 
@@ -105,12 +82,7 @@ class EmployeeList {
             {
                 delete employee_list[i];
             }
-            for (int i = 0; i < current_manager; i++)
-            {
-                delete manager_list[i];
-            }
             delete[] employee_list;
-            delete[] manager_list;
         }
 };
 
@@ -121,7 +93,7 @@ int main () {
     EmployeeList emp_list(10);
     emp_list.add_emplyee(&emp);
     emp_list.add_emplyee(&emp2);
-    emp_list.add_manager(&emp3);
+    emp_list.add_emplyee(&emp3);
     emp_list.print_employee_info();
     return 0;
 }
