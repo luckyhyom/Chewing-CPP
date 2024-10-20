@@ -101,6 +101,70 @@ class Array {
     }
 
     public:
+        class Iterator {
+            int* locations;
+            Array* arr;
+            public:
+                Iterator(Array* arr, int* loc = NULL): arr(arr) {
+                    locations = new int[arr->dim];
+                    for (int i = 0; i < arr->dim; i++) locations[i] = (loc != NULL ? loc[i] : 0);
+                }
+                Iterator(const Iterator& it): arr(it.arr) {
+                    locations = new int [arr->dim];
+                    for (int i = 0; i < arr->dim; i++) locations[i] = it.locations[i];
+                }
+                ~Iterator() {
+                    delete[] locations;
+                }
+                Iterator& operator++() {
+                    if(locations[0] >= arr->size[0]) return (*this);
+                    bool carry = false;
+                    int i = arr->dim - 1;
+                    do
+                    {
+                        locations[i]++;
+                        if(locations[i] >= arr->size[i] && i >= 1) {
+                            locations[i] -= arr->size[i];
+                            carry = true;
+                            i--;
+                        } else {
+                            carry = false;
+                        }
+                    } while (i >= 0 && carry);
+                    
+                    return (*this);
+                }
+
+                Iterator operator++(int) {
+                    Iterator itr(*this);
+                    ++(*this);
+                    return itr;
+                }
+
+                Iterator& operator=(const Iterator& itr) {
+                    arr = itr.arr;
+                    delete[] locations;
+                    locations = new int[itr.arr->dim]; // Q1.
+                    for (int i = 0; i < arr->dim; i++)
+                    {
+                        locations[i] = itr.locations[i];
+                    }
+                    return (*this);
+                }
+
+                bool operator!= (const Iterator& itr) {
+                    if(arr->dim != itr.arr->dim) return true;
+                    if(arr != itr.arr) return true;
+
+                    for (int i = 0; i != arr->dim; i++)
+                    {
+                        if(locations[i] != itr.locations[i]) return true;
+                    }
+                    return false;
+                }
+
+                Int operator*();
+        };
         Array(int dim, int* arr_size):dim(dim) {
             size = new int[dim];
             for (int i = 0; i < dim; i++) size[i] = arr_size[i];
@@ -137,6 +201,23 @@ class Array {
         void print_all() {
             print_all_(top);
         }
+
+        Iterator begin() {
+            int *locations = new int[dim];
+            for (int i = 0; i < dim; ++i) locations[i] = 0;
+            Iterator itr(this, locations);
+            delete[] locations;
+            return itr;
+        };
+        
+        Iterator end() {
+            int *locations = new int[dim];
+            locations[0] = size[0];
+            for (int i = 1; i < dim; ++i) locations[i] = 0;
+            Iterator itr(this, locations);
+            delete[] locations;
+            return itr;
+        };
 
         Int operator[](const int index);
 };
@@ -202,30 +283,31 @@ Int Array::operator[](const int index) {
     */
     return Int(index, 1, static_cast<void*>(top), this);
 }
+
+Int Array::Iterator::operator*() {
+    Int start = (*arr)[locations[0]];
+    for (int i = 1; i < arr->dim; ++i)
+    {
+        start = start[locations[i]];
+    }
+    return start;
+}
 }
 
 int main() {
     int dim = 3;
     int size[] = {2,3,4};
     MyArray::Array* arr = new MyArray::Array(dim, size);
-    MyArray::Array* copy = new MyArray::Array(*arr);
-    arr->print_all();
-    copy->print_all();
-
-    std::cout << (*arr)[1][0][0] << "?!" << std::endl;;
-
-    for (int i = 0; i < 2; i++)
+    MyArray::Array::Iterator itr = arr->begin();
+    for (int i = 0; itr != arr->end(); itr++, i++)
     {
-        for (int j = 0; j < 3; j++)
-        {
-            for (int k = 0; k < 4; k++)
-            {
-                std::cout << (*copy)[i][j][k] << "[" << i << j << k << "]" << std::endl;;
-            }
-        }
+        (*itr) = i + 1;
     }
     
-    //delete arr;
-    delete copy;
+    for (itr = arr->begin(); itr != arr->end(); itr++)
+    {
+        std::cout << *itr << std::endl;
+    }
+    delete arr;
     return 0;
 }
