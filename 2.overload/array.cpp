@@ -149,9 +149,7 @@ class Int {
 
     public:
         Int(int index, int _level = 0, void* _data = NULL, Array* _array = NULL): level(_level), data(_data), array(_array) {
-            std::cout << "?시발" << std::endl;
-            if(level < 0 || index > array->size[level -1]) {
-                std::cout << "?시발!!" << std::endl;
+            if(_level < 1 || index >= array->size[_level - 1]) {
                 data = NULL;
                 return;
             };
@@ -163,6 +161,11 @@ class Int {
         }
 
         Int(const Int& i) : data(i.data), level(i.level), array(i.array) {}
+        
+        operator int() {
+            if(data) return *static_cast<int*>(data);
+            return 0;
+        }
         
         Int& operator=(const int& a) {
             if (data) *static_cast<int*>(data) = a;
@@ -180,15 +183,10 @@ class Int {
                 1. 스택에 메모리 할당
                 2. 넘길 때.. 지역변수는 데이터가 소멸되는데 괜찮나?
             */
-            std::cout << "?" << std::endl;
             if(!data) return 0;
             return Int(index, level + 1, data, array);
         }
 
-        operator int() {
-            if(data) return *static_cast<int*>(data);
-            return 0;
-        }
 };
 
 Int Array::operator[](const int index) { 
@@ -202,7 +200,6 @@ Int Array::operator[](const int index) {
         1. 스택에 메모리 할당
         2. 넘길 때.. 지역변수는 데이터가 소멸되는데 괜찮나?
     */
-   std::cout << "?Tq" << std::endl;
     return Int(index, 1, static_cast<void*>(top), this);
 }
 }
@@ -215,9 +212,20 @@ int main() {
     arr->print_all();
     copy->print_all();
 
-    //int value = arr[1][1][1];
-    std::cout << arr[1][1][1] << "?!" << std::endl;;
-    delete arr;
+    std::cout << (*arr)[1][0][0] << "?!" << std::endl;;
+
+    for (int i = 0; i < 2; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            for (int k = 0; k < 4; k++)
+            {
+                std::cout << (*copy)[i][j][k] << "[" << i << j << k << "]" << std::endl;;
+            }
+        }
+    }
+    
+    //delete arr;
     delete copy;
     return 0;
 }
