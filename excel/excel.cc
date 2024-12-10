@@ -101,11 +101,68 @@ std::string TextTable::print_table() {
     return data;
 }
 
-class CSVTable : public Table {};
-class HTMLTable : public Table {};
+class CSVTable : public Table {
+    public:
+        CSVTable(int row, int col): Table(row,col) {};
+        std::string print_table();
+        ~CSVTable() { std::cout << "CSVTable Done" << std::endl; };
+};
+
+
+std::string CSVTable::print_table() {
+    int max_length = 5;
+    std::string data;
+    for (size_t i = 0; i < row; i++)
+    {
+        for (size_t j = 0; j < col; j++) {
+            if(data_base[i][j] != nullptr) {
+                data.append(get_cell(i, j));
+            }
+            if(j < col-1) {
+                data.append(",");
+            }
+        }
+        data.append("\n");
+    }
+    return data;
+}
+
+
+class HTMLTable : public Table {
+    public:
+        HTMLTable(int row, int col): Table(row,col) {};
+        std::string print_table();
+        ~HTMLTable() { std::cout << "HTMLTable Done" << std::endl; };
+};
+
+
+std::string HTMLTable::print_table() {
+    int max_length = 5;
+    std::string data;
+    data.append("<div>\n");
+    for (size_t i = 0; i < row; i++)
+    {
+        data.append("   <div>\n");
+        for (size_t j = 0; j < col; j++) {
+            data.append("       <div>");
+            if(data_base[i][j] != nullptr) {
+                data.append(get_cell(i, j));
+            } else {
+                data.append("Empty");
+            }
+            data.append("</div>\n");
+        }
+        data.append("   </div>\n");
+    }
+    data.append("</div>\n");
+    return data;
+}
+
 
 int main() {
-    TextTable table(5,5);
+    //TextTable table(5,5);
+    //HTMLTable table(5,5);
+    CSVTable table(5,5);
     table.reg_cell(new Cell("Hello World"), 3, 1);
 
     while (1)
