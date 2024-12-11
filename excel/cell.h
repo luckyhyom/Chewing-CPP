@@ -1,14 +1,19 @@
-#include "table.h"
-#pragma once
+#ifndef CELL_H
+#define CELL_H
+
+#include <string>
+
+class Table;
 
 class Cell {
-    friend Table;
-    friend TextTable;
-    Table* table;  // 어느 테이블에 속해있는지
+    friend class Table;
+    Table* table;
     std::string data;
-    int x, y;  // 테이블 에서의 위치
+    int x, y;
     public:
-        Cell(const std::string& data) : data(data){};
+        Cell(const std::string& data);
         int to_numeric();
         std::string stringify();
 };
+
+#endif // CELL_H
