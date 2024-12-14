@@ -7,5 +7,5 @@ int Cell::to_numeric() {
 }
 
 std::string Cell::stringify() {
-    return "";
+    return data;
 }
