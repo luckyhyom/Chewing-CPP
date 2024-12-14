@@ -5,7 +5,6 @@
 
 int main() {
     std::cout << "Program started" << std::endl; // 디버깅 메시지
-    std::cout <<"??";
     TextTable table(5, 5);
     table.reg_cell(new Cell("Hello World"), 3, 1);
 

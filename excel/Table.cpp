@@ -4,9 +4,9 @@
 Table::Table(int row, int col) : row(row), col(col) {
     data_base = new Cell**[row];
     for (size_t i = 0; i < row; i++) {
-        data_base[row] = new Cell*[col];
+        data_base[i] = new Cell*[col];
         for (size_t j = 0; j < col; j++) {
-            data_base[row][col] = nullptr;
+            data_base[i][j] = nullptr;
         }
     }
 }
