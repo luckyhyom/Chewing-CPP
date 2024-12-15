@@ -13,6 +13,8 @@ file(GLOB_RECURSE TABLE_TEST_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/table/*.cpp
 )
 
+message(STATUS "TABLE_TEST_SOURCES found: ${TABLE_TEST_SOURCES}")
+
 # 모든 테스트 소스를 하나로 합침
 set(TEST_SOURCES
     ${CORE_TEST_SOURCES}

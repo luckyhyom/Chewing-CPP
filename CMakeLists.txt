@@ -14,19 +14,27 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 include_directories(${CMAKE_SOURCE_DIR}/include/core)
 include_directories(${CMAKE_SOURCE_DIR}/include/table)
 
+# ------------------------------------------------------------------------------
+# 라이브러리 소스 수집 (main.cpp는 제외)
+# ------------------------------------------------------------------------------
+file(GLOB_RECURSE LIB_SOURCES 
+    ${CMAKE_SOURCE_DIR}/src/**/*.cpp
+)
 
-# 소스 파일 추가
-file(GLOB_RECURSE SOURCES ${CMAKE_SOURCE_DIR}/src/**/*.cpp)
+# main.cpp 제거
+list(REMOVE_ITEM LIB_SOURCES ${CMAKE_SOURCE_DIR}/src/main.cpp)
 
-# 특정 파일 추가
-set(SOURCES ${SOURCES} src/main.cpp)
+# 라이브러리 생성
+add_library(MyProjectLib ${LIB_SOURCES})
 
-add_library(MyProjectLib ${SOURCES})
+# ------------------------------------------------------------------------------
+# 실행 파일 (TableProgram) 생성
+# ------------------------------------------------------------------------------
+add_executable(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/src/main.cpp)
+target_link_libraries(${PROJECT_NAME} PRIVATE MyProjectLib)
 
-# 실행 파일 생성
-add_executable(${PROJECT_NAME} ${SOURCES})
-
-
-# tests 디렉토리 추가
+# ------------------------------------------------------------------------------
+# 테스트 설정
+# ------------------------------------------------------------------------------
 enable_testing()
 add_subdirectory(tests)
