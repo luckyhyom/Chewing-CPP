@@ -21,5 +21,12 @@ file(GLOB_RECURSE SOURCES ${CMAKE_SOURCE_DIR}/src/**/*.cpp)
 # 특정 파일 추가
 set(SOURCES ${SOURCES} src/main.cpp)
 
+add_library(MyProjectLib ${SOURCES})
+
 # 실행 파일 생성
 add_executable(${PROJECT_NAME} ${SOURCES})
+
+
+# tests 디렉토리 추가
+enable_testing()
+add_subdirectory(tests)
