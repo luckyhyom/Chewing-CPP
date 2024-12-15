@@ -16,6 +16,7 @@ while true; do
         echo "Error: fswatch is not installed. Please install it and try again."
         exit 1
     fi
+    echo "Watching.."
 
     # 파일 변경 감지
     fswatch -1 $FILES
