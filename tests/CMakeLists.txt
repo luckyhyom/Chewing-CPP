@@ -3,43 +3,54 @@
 # GoogleTest 찾기
 find_package(GTest REQUIRED)
 
-# core 테스트 소스 파일
+# 빌드 출력 디렉토리 설정 (선택 사항)
+# 테스트 실행 파일들이 build/bin 에 생성되도록 설정
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+# ------------------------------------------------------------------------------
+# Core 테스트
+# ------------------------------------------------------------------------------
 file(GLOB_RECURSE CORE_TEST_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/core/*.cpp
 )
 
-# table 테스트 소스 파일
+add_executable(CoreTests ${CORE_TEST_SOURCES})
+target_link_libraries(CoreTests
+    PRIVATE
+        GTest::GTest
+        GTest::Main
+        MyProjectLib   # 실제 프로젝트 라이브러리 이름
+)
+set_target_properties(CoreTests PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+)
+
+# ctest에 "CoreTests"라는 이름으로 등록
+add_test(NAME CoreTests COMMAND CoreTests)
+
+
+# ------------------------------------------------------------------------------
+# Table 테스트
+# ------------------------------------------------------------------------------
 file(GLOB_RECURSE TABLE_TEST_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/table/*.cpp
 )
 
-message(STATUS "TABLE_TEST_SOURCES found: ${TABLE_TEST_SOURCES}")
-
-# 모든 테스트 소스를 하나로 합침
-set(TEST_SOURCES
-    ${CORE_TEST_SOURCES}
-    ${TABLE_TEST_SOURCES}
-)
-
-# 테스트 실행 파일 생성
-add_executable(UnitTests ${TEST_SOURCES})
-
-# GoogleTest와 링크
-target_link_libraries(UnitTests
+add_executable(TableTests ${TABLE_TEST_SOURCES})
+target_link_libraries(TableTests
     PRIVATE
         GTest::GTest
         GTest::Main
-        # 만약 테스트 대상 라이브러리가 따로 있다면 여기에 추가
-        # e.g. MyLib
-        # e.g. PRIVATE MyLib
         MyProjectLib
 )
-
-# 빌드 출력 디렉토리 설정 (선택 사항)
-set_target_properties(UnitTests PROPERTIES
+set_target_properties(TableTests PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
 
-# 테스트 등록
+# ctest에 "TableTests"라는 이름으로 등록
+add_test(NAME TableTests COMMAND TableTests)
+
+# ------------------------------------------------------------------------------
+# 최종적으로 ctest를 통해 테스트 실행 가능
+# ------------------------------------------------------------------------------
 enable_testing()
-add_test(NAME UnitTests COMMAND UnitTests)

@@ -1,23 +1,33 @@
 #include <gtest/gtest.h>
+#include "core/Cell.h"
 
-// 테스트하려는 Cell 클래스가 있다고 가정
-// #include "Cell.h"  // 실제 Cell 클래스 헤더 파일
+/*
+ * Cell 클래스 구조:
+ *
+ * Cell(const std::string &data)
+ * int to_numeric()
+ * std::string stringify()
+ *
+ * 현재 구현에서 to_numeric()은 항상 0을 반환.
+ * stringify()는 생성자에 전달된 data를 그대로 반환.
+ */
 
-TEST(CellTest, DefaultConstructor)
+TEST(CellTest, ConstructorAndStringify)
 {
-    // 가상의 Cell 클래스 예시
-    // Cell cell; // 기본 생성자
+    // 생성 시 문자열을 넣어두면, stringify()를 통해 동일한 문자열을 얻을 수 있어야 함
+    Cell c1("Hello");
+    EXPECT_EQ(c1.stringify(), "Hello");
 
-    // EXPECT_EQ(cell.GetValue(), 0);
-    // EXPECT_TRUE(cell.IsEmpty());
-    // ...
-    SUCCEED(); // 일단 예시로 통과시킴
+    Cell c2("12345");
+    EXPECT_EQ(c2.stringify(), "12345");
+
+    Cell c3(""); // 빈 문자열
+    EXPECT_EQ(c3.stringify(), "");
 }
 
-TEST(CellTest, SetValue)
+TEST(CellTest, ToNumericDefault)
 {
-    // Cell cell;
-    // cell.SetValue(10);
-    // EXPECT_EQ(cell.GetValue(), 10);
-    SUCCEED();
+    // 현재 구현으로는 항상 0을 반환
+    Cell c("any data");
+    EXPECT_EQ(c.to_numeric(), 0) << "Default to_numeric() should return 0.";
 }
