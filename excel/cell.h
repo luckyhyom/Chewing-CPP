@@ -5,15 +5,17 @@
 
 class Table;
 
-class Cell {
+class Cell
+{
     friend class Table;
-    Table* table;
+    Table *table;
     std::string data;
     int x, y;
-    public:
-        Cell(const std::string& data);
-        int to_numeric();
-        std::string stringify();
+
+public:
+    Cell(const std::string &data);
+    int to_numeric();
+    std::string stringify();
 };
 
 #endif // CELL_H
