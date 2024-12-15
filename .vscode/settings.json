@@ -71,5 +71,6 @@
         "variant": "cpp",
         "algorithm": "cpp"
     },
-    "C_Cpp.errorSquiggles": "disabled"
+    "C_Cpp.errorSquiggles": "disabled",
+    "cmake.sourceDirectory": "/Users/hyomin/Desktop/Programing/Chewing-CPP/excel"
 }
