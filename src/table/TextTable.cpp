@@ -1,10 +1,11 @@
 #include "TextTable.h"
 #include <iostream>
+#include <sstream>
 
-// 가독성과 재활용을 위해 상수로 분리
+// 매직 넘버를 상수로 분리
 static const int MAX_LENGTH = 5;
 static const std::string CELL_SEPARATOR = "| ";
-static const std::string EMPTY_CELL = "|         "; // "| " + 9칸(' ' * 9)
+static const std::string EMPTY_CELL     = "|         "; // "| " + 9칸 = 총 11글자
 
 TextTable::TextTable(int row, int col)
     : Table(row, col)
@@ -17,68 +18,66 @@ TextTable::~TextTable()
 }
 
 // 행 구분선 생성 함수
-static std::string makeRowLine(size_t colCount)
+std::string TextTable::makeRowLine() const
 {
-    // "----------"는 정확히 10글자
-    // 각 열마다 10글자씩, 마지막에 "-"를 하나 더 붙여서 총 (colCount*10 + 1)개의 '-'
-    // 여기서는 기존 코드처럼 반복해서 붙이는 방식을 유지
-    std::string line;
-    for (size_t i = 0; i < colCount; ++i) {
-        line.append("----------");
+    // 각 열마다 10개의 '-' ("----------")을 붙이고
+    // 마지막에 '-' 한 번 더 붙여서 총 col * 10 + 1개의 '-'
+    std::ostringstream oss;
+    for (size_t c = 0; c < col; ++c) {
+        oss << "----------";
     }
-    line.append("-");
-    line.append("\n");
-    return line;
+    oss << "-\n";  // 마지막 '-' + 개행
+    return oss.str();
 }
 
 // 셀 내용 포매팅 함수
-static std::string formatCellContent(const std::string& content)
+std::string TextTable::formatCellContent(const std::string& content) const
 {
-    // 셀 내용의 실제 길이를 먼저 확인
-    const size_t len = content.length();
-
-    // MAX_LENGTH보다 길면 자르고 ".. " 접미어를 붙임
-    if (len > MAX_LENGTH) {
+    if (content.size() > MAX_LENGTH) {
+        // MAX_LENGTH를 초과하면 잘라서 ".. "을 붙임
         return content.substr(0, MAX_LENGTH) + ".. ";
     }
-    // MAX_LENGTH보다 짧으면 공백으로 패딩
-    else if (len < MAX_LENGTH) {
-        // "  " 여유공간을 고려해 (MAX_LENGTH + 3 - len)개의 공백
-        return content + std::string(MAX_LENGTH + 3 - len, ' ');
+    else if (content.size() < MAX_LENGTH) {
+        // MAX_LENGTH보다 짧으면 공백으로 패딩
+        // "  " (두 칸) 여유를 고려해 (MAX_LENGTH + 3 - content.size())칸의 공백
+        return content + std::string(MAX_LENGTH + 3 - content.size(), ' ');
     }
-    // 딱 같으면 기본적으로 "  " (세 칸) 붙여줌
     else {
+        // 길이가 정확히 MAX_LENGTH인 경우에는 "   " 붙여줌
         return content + "   ";
     }
 }
 
 std::string TextTable::print_table()
 {
-    std::string result;
-    // 먼저 행 구분선부터 생성
-    std::string rowLine = makeRowLine(col);
+    // row나 col이 0이면 테이블이 의미가 없으므로 빈 문자열 반환
+    if (row == 0 || col == 0) {
+        return {};
+    }
 
-    // 테이블 상단 선
-    result.append(rowLine);
+    // 문자열 조립을 위한 스트림
+    std::ostringstream oss;
 
-    // 실제 데이터 출력
+    // 행 구분선 미리 생성
+    std::string rowLine = makeRowLine();
+
+    // 테이블 최상단 선
+    oss << rowLine;
+
     for (size_t i = 0; i < row; ++i) {
         for (size_t j = 0; j < col; ++j) {
             if (data_base[i][j] != nullptr) {
-                // 셀 내용 한 번만 가져와서 사용
+                // 셀 내용을 한 번만 가져와서 사용
                 std::string cellContent = get_cell(i, j);
-                result.append(CELL_SEPARATOR);
-                result.append(formatCellContent(cellContent));
-            }
-            else {
-                // 비어 있는 셀 처리
-                result.append(EMPTY_CELL);
+                oss << CELL_SEPARATOR << formatCellContent(cellContent);
+            } else {
+                // 비어있는 셀 처리
+                oss << EMPTY_CELL;
             }
         }
-        result.append("|\n");
-        // 행 끝나면 구분선 다시 출력
-        result.append(rowLine);
+        oss << "|\n";       // 각 행 끝의 세로줄 + 개행
+        oss << rowLine;    // 행 구분선
     }
 
-    return result;
+    return oss.str();
 }
