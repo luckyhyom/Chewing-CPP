@@ -1,6 +1,6 @@
 #include "TextTable.h"
 #include "HTMLTable.h"
-#include "table.h"
+#include "Table.h"
 #include <iostream>
 #include <limits>
 

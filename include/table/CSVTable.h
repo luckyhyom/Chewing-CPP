@@ -1,7 +1,7 @@
 #ifndef CSVTABLE_H
 #define CSVTABLE_H
 
-#include "table.h"
+#include "Table.h"
 
 class CSVTable : public Table
 {

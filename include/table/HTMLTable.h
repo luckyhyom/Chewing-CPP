@@ -1,7 +1,7 @@
 #ifndef HTMLTABLE_H
 #define HTMLTABLE_H
 
-#include "table.h"
+#include "Table.h"
 
 class HTMLTable : public Table
 {

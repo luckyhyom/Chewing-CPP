@@ -1,7 +1,7 @@
 #ifndef TEXTTABLE_H
 #define TEXTTABLE_H
 
-#include "table.h"
+#include "Table.h"
 
 class TextTable : public Table
 {
