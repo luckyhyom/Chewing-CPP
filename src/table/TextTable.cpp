@@ -64,6 +64,15 @@ std::string TextTable::print_table()
     // 테이블 최상단 선
     oss << rowLine;
 
+    // Labeling the columns.
+    for (size_t i = 0; i < col; i++) {
+        std::string label(1, static_cast<char>(Table::ASCII_VALUE_FOR_A + i));
+        oss << CELL_SEPARATOR << formatCellContent(label);
+    }
+    
+    oss << "|\n";
+    oss << rowLine;    
+
     for (size_t i = 0; i < row; ++i) {
         for (size_t j = 0; j < col; ++j) {
             if (data_base[i][j] != nullptr) {

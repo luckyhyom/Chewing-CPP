@@ -18,11 +18,14 @@ TEST(TextTableTest, PrintEmptyTable)
     // 아무 셀도 등록하지 않은 비어있는 테이블의 출력
     TextTable table(2, 3);
     std::string output = table.print_table();
-
-    // 출력이 비어있지 않고, 최소한 구분선("----------")이 포함되어 있는지 확인
+    std::cout << "[DEBUG] print_table output:\n"
+              << output << std::endl;
+    // 출력이 비어있지 않고, 최소한 구분선("----------")과 Col Label이 포함되어 있는지 확인
     EXPECT_FALSE(output.empty());
     EXPECT_NE(output.find("----------"), std::string::npos)
         << "Row separator not found in print_table output.";
+    EXPECT_NE(output.find("A"), std::string::npos)
+        << "Label not found in print_table output.";
 }
 
 TEST(TextTableTest, PrintTableWithData)

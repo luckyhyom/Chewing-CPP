@@ -30,6 +30,30 @@ std::string HTMLTable::renderCell(Cell* cell) const
     return oss.str();
 }
 
+std::string HTMLTable::renderCell(std::string content) const
+{
+    std::ostringstream oss;
+    oss << INDENT_CELL << "<td>";
+    if (!content.empty()) {
+        oss << content;
+    }
+    oss << "</td>\n";
+    return oss.str();
+}
+
+// Label 출력
+std::string HTMLTable::renderLabel() const
+{
+    std::ostringstream oss;
+    oss << INDENT_ROW << "<tr>\n";
+    for (size_t i = 0; i < col; ++i) {
+        std::string label(1, static_cast<char>(Table::ASCII_VALUE_FOR_A + i));
+        oss << renderCell(label);
+    }
+    oss << INDENT_ROW << "</tr>\n";
+    return oss.str();
+}
+
 // 한 행(row)을 <tr></tr> 태그로 감싸는 헬퍼 함수
 std::string HTMLTable::renderRow(size_t rowIndex) const
 {
@@ -55,6 +79,9 @@ std::string HTMLTable::print_table()
     // 테이블 시작
     // 필요하다면 class나 style 속성 등 추가 가능. 예: <table class="my-table" style="border:1px solid black;">
     oss << "<table>\n";
+
+    // Labeling the columns.
+    oss << renderLabel();
 
     for (size_t i = 0; i < row; ++i) {
         oss << renderRow(i);

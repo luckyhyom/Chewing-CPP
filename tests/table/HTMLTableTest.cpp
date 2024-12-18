@@ -2,6 +2,18 @@
 #include "HTMLTable.h"
 #include "Cell.h"
 
+/**
+ * TDD 장점
+ * 1. Test Case 검증 자동화
+ *    - 코드 수정 시 Output이 달라졌을 때 인지할 수 있음
+ *    - 검증 시간 단축
+ *          
+ * (참고1) 내부 함수는 검증하지 않는다.
+ * 일반적으로 리팩토링은 테스트 대상의 Output을 유지하는데
+ * 내부 함수를 검증하게 되면 리팩토링할때마다 Test Code를 수정해야한다.
+ * 따라서 내부 함수는 검증하지 않는다.
+ */
+
 TEST(HTMLTableTest, PrintTableBasic)
 {
     // 2행 2열짜리 HTMLTable 생성
@@ -30,6 +42,10 @@ TEST(HTMLTableTest, PrintTableBasic)
     EXPECT_NE(std::string::npos, result.find("<tr>"));
     EXPECT_NE(std::string::npos, result.find("<td>"));
     EXPECT_NE(std::string::npos, result.find("</td>"));
+
+    // Label 포함 여부
+    EXPECT_NE(std::string::npos, result.find("A"));
+    EXPECT_NE(std::string::npos, result.find("B"));
 }
 
 TEST(HTMLTableTest, PrintTableEmpty)
@@ -59,12 +75,12 @@ TEST(HTMLTableTest, PrintTablePartialCells)
     // "Data"는 포함되어야 함
     EXPECT_NE(std::string::npos, result.find("Data"));
 
-    // <td> 태그가 총 4번 나와야 함 (2행 x 2열)
+    // <td> 태그가 총 6번 나와야 함 (2행 x 2열) + Label 2열
     size_t tdCount = 0;
     size_t pos = 0;
     while ((pos = result.find("<td>", pos)) != std::string::npos) {
         ++tdCount;
-        pos += 4; // "<td>".size() == 4
+        pos += 6; // "<td>".size() == 6
     }
-    EXPECT_EQ(4u, tdCount) << "2행 x 2열이므로 <td>가 4개 있어야 합니다.";
+    EXPECT_EQ(6u, tdCount) << "2행 x 2열 + Label 2열 이므로 <td>가 6개 있어야 합니다.";
 }

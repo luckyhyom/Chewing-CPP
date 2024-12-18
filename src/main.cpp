@@ -7,8 +7,8 @@
 int main()
 {
     std::cout << "Program started" << std::endl; // 디버깅 메시지
-    HTMLTable table(5, 5);
-    table.reg_cell(new Cell("Hello World"), 3, 1);
+    HTMLTable table(2, 2);
+    table.reg_cell(new Cell("Hello World"), 1, 1);
 
     while (1)
     {
@@ -17,8 +17,8 @@ int main()
         int x, y;
         std::string value;
 
-        std::cout << "select DEBUG YES JAM: ";
-        if (!(std::cin >> x))
+        std::cout << "select col Alphabet: ";
+        if (!(std::cin >> y))
         {
             std::cerr << "Invalid input for x. Please enter an integer." << std::endl;
             std::cin.clear();
@@ -26,8 +26,8 @@ int main()
             continue;
         }
 
-        std::cout << "select y: ";
-        if (!(std::cin >> y))
+        std::cout << "select row number: ";
+        if (!(std::cin >> x))
         {
             std::cerr << "Invalid input for y. Please enter an integer." << std::endl;
             std::cin.clear();
