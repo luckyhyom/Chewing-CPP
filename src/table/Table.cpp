@@ -1,5 +1,10 @@
 #include "Table.h"
 #include <iostream>
+#include <cctype>
+
+
+constexpr char COLUMN_START = 'A'; // 열 시작 문자
+constexpr int BASE_INDEX = 1;     // Excel의 1 기반 인덱스를 0 기반으로 변환
 
 Table::Table(int row, int col) : row(row), col(col)
 {
@@ -27,8 +32,12 @@ Table::~Table()
     delete[] data_base;
 }
 
-void Table::reg_cell(Cell *c, int row, int col)
+void Table::reg_cell(Cell *c, std::string location)
 {
+    int col = std::toupper(location[0]) - COLUMN_START;
+    std::string input_row = location.substr(1); // 1번 인덱스부터 끝까지
+    int row = std::stoi(input_row) - BASE_INDEX;
+
     c->table = this;
     c->x = row;
     c->y = col;

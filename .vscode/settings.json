@@ -78,7 +78,8 @@
         "map": "cpp",
         "set": "cpp",
         "span": "cpp",
-        "unordered_set": "cpp"
+        "unordered_set": "cpp",
+        "regex": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled",
     "cmake.sourceDirectory": "/Users/hyomin/Desktop/Programing/Chewing-CPP"

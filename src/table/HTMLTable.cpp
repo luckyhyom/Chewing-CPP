@@ -30,7 +30,7 @@ std::string HTMLTable::renderCell(Cell* cell) const
     return oss.str();
 }
 
-std::string HTMLTable::renderCell(std::string content) const
+std::string HTMLTable::renderCell(const std::string content) const
 {
     std::ostringstream oss;
     oss << INDENT_CELL << "<td>";

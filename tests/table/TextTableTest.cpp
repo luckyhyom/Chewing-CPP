@@ -34,11 +34,11 @@ TEST(TextTableTest, PrintTableWithData)
 
     // Table 클래스에 정의된 reg_cell(Cell*, int row, int col)
     // 이 함수를 통해 셀을 등록하는 구조
-    table.reg_cell(new Cell("Hello"), 0, 0);
-    table.reg_cell(new Cell("World"), 0, 1);
-    table.reg_cell(new Cell("TestString"), 0, 2); // 10글자
-    table.reg_cell(new Cell("123456789"), 1, 0);  // 9글자
-    table.reg_cell(new Cell("ABC"), 1, 1);
+    table.reg_cell(new Cell("Hello"), "A1");
+    table.reg_cell(new Cell("World"), "B1");
+    table.reg_cell(new Cell("TestString"), "C1"); // 10글자
+    table.reg_cell(new Cell("123456789"), "A2");  // 9글자
+    table.reg_cell(new Cell("ABC"), "B2");
     // (1, 2)는 아무 것도 등록하지 않아 nullptr 상태 유지
 
     std::string output = table.print_table();

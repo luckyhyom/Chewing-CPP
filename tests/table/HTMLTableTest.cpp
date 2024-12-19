@@ -21,10 +21,10 @@ TEST(HTMLTableTest, PrintTableBasic)
 
     // Cell 생성: Cell(const std::string& data)
     auto cell1 = new Cell("Hello");
-    table.reg_cell(cell1, 0, 0);  // (0,0)에 등록
+    table.reg_cell(cell1, "A1");  // (0,0)에 등록
 
     auto cell2 = new Cell("1234");
-    table.reg_cell(cell2, 0, 1);  // (0,1)에 등록
+    table.reg_cell(cell2, "A2");  // (0,1)에 등록
 
     // (1,0), (1,1)는 비어있게 둠(nullptr)
 
@@ -66,7 +66,7 @@ TEST(HTMLTableTest, PrintTablePartialCells)
     HTMLTable table(2, 2);
 
     auto cell = new Cell("Data");
-    table.reg_cell(cell, 0, 0);  // (0,0)에만 등록
+    table.reg_cell(cell, "A1");  // (0,0)에만 등록
 
     // (0,1), (1,0), (1,1)는 비어있음(nullptr)
 
