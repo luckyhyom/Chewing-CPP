@@ -7,7 +7,7 @@ brew install cmake
 brew install googletest
 ```
 
-# excute shell script
+### excute shell script
 
 ```bash
 ./test.sh
