@@ -7,15 +7,17 @@ class Table;
 
 class Cell
 {
-    friend class Table;
-    Table *table;
-    std::string data;
-    int x, y;
+friend class Table;
+protected:
+  Table *table;
+  const void* data;
+  int x, y;
 
 public:
-    Cell(const std::string &data);
-    int to_numeric();
-    std::string stringify();
+  Cell(const void *data);
+  virtual int to_numeric() = 0;
+  virtual std::string stringify() = 0;
+  virtual ~Cell() {};
 };
 
 #endif // CELL_H

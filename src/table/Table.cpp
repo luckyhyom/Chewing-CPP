@@ -8,10 +8,10 @@ constexpr int BASE_INDEX = 1;     // Excel의 1 기반 인덱스를 0 기반으�
 
 Table::Table(int row, int col) : row(row), col(col)
 {
-    data_base = new Cell **[row];
+    data_base = new Cell**[row];
     for (size_t i = 0; i < row; i++)
     {
-        data_base[i] = new Cell *[col];
+        data_base[i] = new Cell*[col];
         for (size_t j = 0; j < col; j++)
         {
             data_base[i][j] = nullptr;
@@ -44,9 +44,13 @@ void Table::reg_cell(Cell *c, std::string location)
     data_base[row][col] = c;
 }
 
-std::string Table::get_cell(int row, int col)
+/**
+ * Cell이 가진 데이터의 자료형은 추상화시킨다.
+ * 따라서 Table에서 Cell의 data를 반환하지 않는다. (이렇게 되면 Table도 get_cell을 추상화해서 각각 구현해야함)
+ */
+Cell* Table::get_cell(int row, int col)
 {
-    return data_base[row][col] ? data_base[row][col]->data : "";
+    return data_base[row][col];
 }
 
 std::ostream &operator<<(std::ostream &o, Table &t)

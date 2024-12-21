@@ -1,6 +1,9 @@
 #include <gtest/gtest.h>
 #include "TextTable.h"
-#include "core/Cell.h"
+#include "StringCell.h"
+#include "NumberCell.h"
+#include "ExprCell.h"
+#include "DateCell.h"
 
 TEST(TextTableTest, ConstructorDestructor)
 {
@@ -34,11 +37,11 @@ TEST(TextTableTest, PrintTableWithData)
 
     // Table 클래스에 정의된 reg_cell(Cell*, int row, int col)
     // 이 함수를 통해 셀을 등록하는 구조
-    table.reg_cell(new Cell("Hello"), "A1");
-    table.reg_cell(new Cell("World"), "B1");
-    table.reg_cell(new Cell("TestString"), "C1"); // 10글자
-    table.reg_cell(new Cell("123456789"), "A2");  // 9글자
-    table.reg_cell(new Cell("ABC"), "B2");
+    table.reg_cell(new StringCell(new std::string("Hello")), "A1");
+    table.reg_cell(new StringCell(new std::string("World")), "B1");
+    table.reg_cell(new StringCell(new std::string("TestString")), "C1"); // 10글자
+    table.reg_cell(new NumberCell(new int(123456789)), "A2");  // 9글자
+    table.reg_cell(new StringCell(new std::string("ABC")), "B2");
     // (1, 2)는 아무 것도 등록하지 않아 nullptr 상태 유지
 
     std::string output = table.print_table();

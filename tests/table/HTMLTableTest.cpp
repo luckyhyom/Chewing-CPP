@@ -1,6 +1,9 @@
 #include <gtest/gtest.h>
 #include "HTMLTable.h"
-#include "Cell.h"
+#include "StringCell.h"
+#include "NumberCell.h"
+#include "ExprCell.h"
+#include "DateCell.h"
 
 /**
  * TDD 장점
@@ -20,10 +23,10 @@ TEST(HTMLTableTest, PrintTableBasic)
     HTMLTable table(2, 2);
 
     // Cell 생성: Cell(const std::string& data)
-    auto cell1 = new Cell("Hello");
+    auto cell1 = new StringCell(new std::string("Hello"));
     table.reg_cell(cell1, "A1");  // (0,0)에 등록
 
-    auto cell2 = new Cell("1234");
+    auto cell2 = new NumberCell(new int(1234));
     table.reg_cell(cell2, "A2");  // (0,1)에 등록
 
     // (1,0), (1,1)는 비어있게 둠(nullptr)
@@ -65,7 +68,7 @@ TEST(HTMLTableTest, PrintTablePartialCells)
     // 일부분만 셀을 등록했을 때, 나머지 셀이 비어있는 <td></td>로 표현되는지 확인
     HTMLTable table(2, 2);
 
-    auto cell = new Cell("Data");
+    auto cell = new StringCell(new std::string("Data"));
     table.reg_cell(cell, "A1");  // (0,0)에만 등록
 
     // (0,1), (1,0), (1,1)는 비어있음(nullptr)

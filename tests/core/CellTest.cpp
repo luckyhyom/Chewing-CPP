@@ -1,5 +1,8 @@
 #include <gtest/gtest.h>
-#include "core/Cell.h"
+#include "StringCell.h"
+#include "NumberCell.h"
+#include "ExprCell.h"
+#include "DateCell.h"
 
 /*
  * Cell 클래스 구조:
@@ -15,19 +18,23 @@
 TEST(CellTest, ConstructorAndStringify)
 {
     // 생성 시 문자열을 넣어두면, stringify()를 통해 동일한 문자열을 얻을 수 있어야 함
-    Cell c1("Hello");
+    std::string* value1 = new std::string("Hello");
+    StringCell c1(value1);
     EXPECT_EQ(c1.stringify(), "Hello");
 
-    Cell c2("12345");
+    int* value2 = new int(12345);
+    NumberCell c2(value2);
     EXPECT_EQ(c2.stringify(), "12345");
 
-    Cell c3(""); // 빈 문자열
+    std::string* value3 = new std::string("");
+    StringCell c3(value3);
     EXPECT_EQ(c3.stringify(), "");
 }
 
 TEST(CellTest, ToNumericDefault)
 {
     // 현재 구현으로는 항상 0을 반환
-    Cell c("any data");
+    std::string* value = new std::string("Hello");
+    StringCell c(value);
     EXPECT_EQ(c.to_numeric(), 0) << "Default to_numeric() should return 0.";
 }

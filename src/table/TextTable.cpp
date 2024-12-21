@@ -76,9 +76,14 @@ std::string TextTable::print_table()
     for (size_t i = 0; i < row; ++i) {
         for (size_t j = 0; j < col; ++j) {
             if (data_base[i][j] != nullptr) {
-                // 셀 내용을 한 번만 가져와서 사용
-                std::string cellContent = get_cell(i, j);
-                oss << CELL_SEPARATOR << formatCellContent(cellContent);
+              /**
+               * 현재는 각 셀의 자료형을 선택하는 기능이 없으므로 출력되는 데이터는 모두 std::string 자료형이다.
+               * 따라서 stringify로 모든 데이터를 가져온다.
+               * 
+               * to_numeric은 ExprCell에서 계산이 필요할 때 사용된다.
+               */
+              std::string cellContent = get_cell(i, j)->stringify();
+              oss << CELL_SEPARATOR << formatCellContent(cellContent);
             } else {
                 // 비어있는 셀 처리
                 oss << EMPTY_CELL;
