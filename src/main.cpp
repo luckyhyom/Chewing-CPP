@@ -12,6 +12,7 @@
 
 bool isValidCellReference(const std::string& input);
 std::string identify_data_type(const std::string& value);
+time_t* convertToTimeT(const std::string& value);
 
 int main()
 {
@@ -55,11 +56,7 @@ int main()
           int* cell_data = new int(intValue);
           cell = new NumberCell(cell_data);
         } else if(data_type == "date") {
-          std::istringstream iss(value);
-          time_t intValue;
-          iss >> intValue;
-          time_t* cell_data = new time_t(intValue);
-          cell = new DateCell(cell_data);
+          cell = new DateCell(convertToTimeT(value));
         } else {
           cell = new StringCell(new std::string(value));
         }
@@ -97,3 +94,31 @@ std::string identify_data_type(const std::string& value) {
     // 3. 그 외는 문자열로 간주
     return "string";
 }
+
+time_t* convertToTimeT(const std::string& value) {
+    std::tm timeStruct = {};
+    std::istringstream iss(value);
+    char delimiter; // For the '-' character
+    int year, month, day;
+
+    // Parse the input string
+    iss >> year >> delimiter >> month >> delimiter >> day;
+    if (iss.fail() || delimiter != '-') {
+        throw std::invalid_argument("Invalid date format");
+    }
+
+    // Fill the tm structure
+    timeStruct.tm_year = year - 1900; // tm_year starts from 1900
+    timeStruct.tm_mon = month - 1;    // tm_mon is 0-based
+    timeStruct.tm_mday = day;
+
+    // Convert to time_t
+    time_t timeValue = std::mktime(&timeStruct);
+    if (timeValue == -1) {
+        throw std::runtime_error("Failed to convert date to time_t");
+    }
+
+    // Dynamically allocate memory for time_t
+    return new time_t(timeValue);
+}
+
