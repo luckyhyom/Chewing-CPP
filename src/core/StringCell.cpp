@@ -1,4 +1,5 @@
 #include <iostream>
+#include "StringCell.h"
 
 StringCell::~StringCell() {
   delete static_cast<const std::string*>(this->data);
