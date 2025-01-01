@@ -1,5 +1,10 @@
 #include "DateCell.h"
 #include <sstream>
+#include <iomanip>
+
+DateCell::~DateCell() {
+  delete static_cast<const time_t*>(this->data);
+}
 
 int DateCell::to_numeric() {
   const time_t* value = static_cast<const time_t*>(this->data);
@@ -26,8 +31,8 @@ std::string DateCell::stringify() {
   if (newTimeStruct) {
       oss
         << (newTimeStruct->tm_year + 1900) << "-"
-        << std::setw(2) << std::fill('0') << newTimeStruct->tm_mon + 1  << "-"
-        << std::setw(2) << std::fill('0') << newTimeStruct->tm_mday;
+        << std::setw(2) << std::setfill('0') << newTimeStruct->tm_mon + 1  << "-"
+        << std::setw(2) << std::setfill('0') << newTimeStruct->tm_mday;
   }
   return oss.str();
 };

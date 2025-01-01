@@ -6,4 +6,5 @@ class DateCell : public Cell {
     DateCell(const time_t *data) : Cell(data) {};
     int to_numeric();
     std::string stringify();
+    ~DateCell();
 };

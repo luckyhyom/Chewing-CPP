@@ -1,4 +1,8 @@
-#include "StringCell.h"
+#include <iostream>
+
+StringCell::~StringCell() {
+  delete static_cast<const std::string*>(this->data);
+}
 
 int StringCell::to_numeric() {
   return 0;

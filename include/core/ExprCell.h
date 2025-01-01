@@ -6,4 +6,5 @@ class ExprCell : public Cell {
     ExprCell(const std::string *data) : Cell(data) {};
     int to_numeric();
     std::string stringify();
+    ~ExprCell();
 };

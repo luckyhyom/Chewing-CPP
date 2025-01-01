@@ -13,6 +13,7 @@ class NumberCell : public Cell {
     NumberCell(const int *data) : Cell(data) {}; // new로 초기화된 인자만 받을 수 있도록 포인터를 사용한다.
     int to_numeric();
     std::string stringify();
+    ~NumberCell();
 };
 
 

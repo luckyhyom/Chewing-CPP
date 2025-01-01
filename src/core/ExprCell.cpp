@@ -1,5 +1,9 @@
 #include "ExprCell.h"
 
+ExprCell::~ExprCell() {
+  delete static_cast<const std::string*>(this->data);
+}
+
 int ExprCell::to_numeric() {
   // 1. Tokenize
   // 2. Shunting Yard Algorithm

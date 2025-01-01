@@ -6,4 +6,5 @@ class StringCell : public Cell {
     StringCell(const std::string *data) : Cell(data) {};
     int to_numeric();
     std::string stringify();
+    ~StringCell();
 };
