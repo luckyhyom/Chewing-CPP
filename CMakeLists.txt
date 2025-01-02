@@ -13,6 +13,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 include_directories(${CMAKE_SOURCE_DIR}/include)
 include_directories(${CMAKE_SOURCE_DIR}/include/core)
 include_directories(${CMAKE_SOURCE_DIR}/include/table)
+include_directories(${CMAKE_SOURCE_DIR}/include/utils)
 
 # ------------------------------------------------------------------------------
 # 라이브러리 소스 수집 (main.cpp는 제외)

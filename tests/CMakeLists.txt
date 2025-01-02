@@ -51,6 +51,27 @@ set_target_properties(TableTests PROPERTIES
 add_test(NAME TableTests COMMAND TableTests)
 
 # ------------------------------------------------------------------------------
+# utils 테스트
+# ------------------------------------------------------------------------------
+file(GLOB_RECURSE UTILS_TEST_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils/*.cpp
+)
+
+add_executable(UtilTests ${UTILS_TEST_SOURCES})
+target_link_libraries(UtilTests
+    PRIVATE
+        GTest::GTest
+        GTest::Main
+        MyProjectLib
+)
+set_target_properties(UtilTests PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+)
+
+# ctest에 "UtilTests"라는 이름으로 등록
+add_test(NAME UtilTests COMMAND UtilTests)
+
+# ------------------------------------------------------------------------------
 # 최종적으로 ctest를 통해 테스트 실행 가능
 # ------------------------------------------------------------------------------
 enable_testing()
