@@ -11,14 +11,14 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-22.04, macos-latest]
 
     steps:
     - name: Check out the code
       uses: actions/checkout@v4
 
     - name: Install dependencies (Linux)
-      if: matrix.os == 'ubuntu-latest'
+      if: matrix.os == 'ubuntu-22.04'
       run: |
         sudo apt-get update && sudo apt-get install -y cmake build-essential
         sudo apt-get install -y libgtest-dev
@@ -27,7 +27,7 @@ jobs:
     - name: Install dependencies (macOS)
       if: matrix.os == 'macos-latest'
       run: |
-        brew update && brew install cmake googletest
+        brew update && brew install cmake --formula googletest
 
     - name: Configure and Build
       run: |
@@ -42,7 +42,7 @@ jobs:
         ctest -V
 
     - name: Upload Test Results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: test-results
         path: build/Testing/Temporary/
