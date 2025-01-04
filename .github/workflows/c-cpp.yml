@@ -1,0 +1,48 @@
+name: CMake CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    steps:
+    - name: Check out the code
+      uses: actions/checkout@v4
+
+    - name: Install dependencies (Linux)
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get update && sudo apt-get install -y cmake build-essential
+        sudo apt-get install -y libgtest-dev
+        cd /usr/src/gtest && sudo cmake . && sudo make && sudo mv lib/*.a /usr/lib
+
+    - name: Install dependencies (macOS)
+      if: matrix.os == 'macos-latest'
+      run: |
+        brew update && brew install cmake googletest
+
+    - name: Configure and Build
+      run: |
+        rm -rf ./build
+        cmake -S . -B build
+        cd build
+        make -j$(nproc || sysctl -n hw.ncpu)
+
+    - name: Run Tests
+      run: |
+        cd build
+        ctest -V
+
+    - name: Upload Test Results
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results
+        path: build/Testing/Temporary/
