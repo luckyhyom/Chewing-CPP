@@ -20,6 +20,7 @@ public:
     friend std::ostream &operator<<(std::ostream &o, Table &t); // 선언
     void reg_cell(Cell *c, std::string location);
     Cell* get_cell(int row, int col);
+    Cell* get_cell(std::string location);
     int get_row();
     int get_col();
     virtual ~Table();

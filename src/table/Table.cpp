@@ -53,6 +53,15 @@ Cell* Table::get_cell(int row, int col)
     return data_base[row][col];
 }
 
+Cell* Table::get_cell(std::string location)
+{
+  int col = std::toupper(location[0]) - COLUMN_START;
+  std::string input_row = location.substr(1); // 1번 인덱스부터 끝까지
+  int row = std::stoi(input_row) - BASE_INDEX;
+
+  return data_base[row][col];
+}
+
 std::ostream &operator<<(std::ostream &o, Table &t)
 {
     o << t.print_table(); // 각 테이블의 print_table() 함수 호출

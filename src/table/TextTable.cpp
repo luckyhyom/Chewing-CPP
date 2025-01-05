@@ -66,8 +66,15 @@ std::string TextTable::print_table()
 
     // Labeling the columns.
     for (size_t i = 0; i < col; i++) {
+      if(i < 26) {
         std::string label(1, static_cast<char>(Table::ASCII_VALUE_FOR_A + i));
         oss << CELL_SEPARATOR << formatCellContent(label);
+      } else {
+        // 기수 변환 (알파벳을 26진법으로 해석)
+        std::string label1(1, static_cast<char>(Table::ASCII_VALUE_FOR_A + (i / 26 - 1)));
+        std::string label2(1, static_cast<char>(Table::ASCII_VALUE_FOR_A + (i % 26)));
+        oss << CELL_SEPARATOR << formatCellContent(label1 + label2);
+      }
     }
     
     oss << "|\n";
