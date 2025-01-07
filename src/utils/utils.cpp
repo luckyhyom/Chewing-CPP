@@ -85,4 +85,23 @@ NumStack::~NumStack() {
     delete prev;
   }
 }
+
+
+Cell::Cell(string data, int x, int y, Table* table)
+  : data(data), x(x), y(y), table(table) {}
+
+string Cell::stringify() { return data; }
+int Cell::to_numeric() { return 0; }
+
+Table::Table(int max_row_size, int max_col_size)
+    : max_row_size(max_row_size), max_col_size(max_col_size) {
+  data_table = new Cell**[max_row_size];
+  for (size_t i = 0; i < max_row_size; i++) {
+    data_table[i] = new Cell*[max_col_size];
+    for (size_t j = 0; j < max_col_size; j++)
+    {
+      data_table[i][j] = NULL;
+    }
+  }
+}
 }
