@@ -104,4 +104,16 @@ Table::Table(int max_row_size, int max_col_size)
     }
   }
 }
+
+Table::~Table() {
+  for (int i = 0; i < max_row_size; i++) {
+    for (int i = 0; i < max_col_size; i++) {
+      if(data_table[i][j]) delete data_table[i][j];
+    }
+  }
+  for (size_t i = 0; i < max_row_size; i++) {
+    delete[] data_table[i];
+  }
+  delete[] data_table;
+}
 }

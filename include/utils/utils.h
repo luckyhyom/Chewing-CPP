@@ -2,7 +2,7 @@
 #define UTILS_H
 
 #include <string>
-using std::string
+using std::string;
 
 namespace MyExcel {
 class Vector {
