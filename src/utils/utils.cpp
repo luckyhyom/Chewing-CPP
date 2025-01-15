@@ -165,4 +165,35 @@ std::ostream& operator<<(std::stream& o, Table& table) {
   o << table.print_table();
   return o;
 }
+
+TxtTable::TxtTable(int row, int col) : Table(row, col) {}
+
+string TxtTable::print_table() {
+  string total_table;
+  
+  // 열 개수만큼의 크기의 int 배열을 만든다.
+  int* col_max_wide = new int[max_col_size];
+
+  // 열 A부터 Z까지 순회한다.
+  for (int i = 0; i < max_col_size; i++) {
+    unsigned int max_wide = 2; // 최대 넓이 2
+    for (int j = 0; j < max_row_size; j++) { // 행을 순회 한다.
+
+
+      if (data_table[j][i] && // 데이터가 있으면서
+          data_table[j][i]->stringify().length() > max_wide // 최대 넓이보다 길다면
+          ) {
+            max_wide = data_table[j][i]->stringify().length(); // 최대 넓이를 해당 데이터의 길이만큼으로 늘린다.
+      }
+    }
+    col_max_wide[i] = max_wide; // i열의 최대 넓이가 정해진다. -> 열 별로 넓이가 다르다.
+  }
+
+  // 맨 상단에 열 정보 표시
+  total_table += "    ";
+  int total_wide = 4;
+  for (int i = 0; i < max_col_size; i++) {
+    //if()
+  }
+}
 }
