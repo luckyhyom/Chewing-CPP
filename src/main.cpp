@@ -1,5 +1,6 @@
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include <limits>
 #include <regex>
 #include "TextTable.h"
@@ -9,62 +10,75 @@
 #include "NumberCell.h"
 #include "ExprCell.h"
 #include "DateCell.h"
+#include "utils.h"
 
 bool isValidCellReference(const std::string& input);
 std::string identify_data_type(const std::string& value);
 time_t* convertToTimeT(const std::string& value);
 
-int main()
-{
-    std::cout << "Program started" << std::endl; // 디버깅 메시지
-    TextTable table(8, 8);
-    std::string* example = new std::string("Hello World");
-    table.reg_cell(new StringCell(example), "B2");
+int main() {
+  MyExcel::TxtTable table(5, 5);
+  std::ofstream out("test.txt");
 
-    while (1)
-    {
-        std::cout << table << std::endl;
+  table.reg_cell(new MyExcel::Cell("Hello~", 0, 0, &table), 0, 0);
+  table.reg_cell(new MyExcel::Cell("C++", 0, 1, &table), 0, 1);
 
-        std::string location;
-        std::string value;
-
-        std::cout << "Please enter the cell location (e.g., A1, C5) where you would like to input the data. : \n";
-        if (!(std::cin >> location) || !isValidCellReference(location))
-        {
-            std::cerr << "Invalid cell location. Please enter a valid cell reference (e.g., A1, C5)." << std::endl;
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            continue;
-        }
-
-        std::cout << "input value: ";
-        if (!(std::cin >> value))
-        {
-            std::cerr << "Invalid input for value. Please enter a valid string." << std::endl;
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            continue;
-        }
-      
-        // value를 new로 초기화 하지 않으면.. 입력 받은 값은 이 함수의 지역 변수로서 소멸되기때문에 의미없는 값을 가리키는 포인터만 남는다.
-        Cell* cell;
-        std::string data_type = identify_data_type(value);
-        if(data_type == "int") {
-          std::istringstream iss(value);
-          int intValue;
-          iss >> intValue;
-          int* cell_data = new int(intValue);
-          cell = new NumberCell(cell_data);
-        } else if(data_type == "date") {
-          cell = new DateCell(convertToTimeT(value));
-        } else {
-          cell = new StringCell(new std::string(value));
-        }
-        table.reg_cell(cell, location);
-    }
-
-    return 0;
+  table.reg_cell(new MyExcel::Cell("Programming", 1, 1, &table), 1, 1);
+  std::cout << std::endl << table;
+  out << table;
 }
+
+//int main()
+//{
+//    std::cout << "Program started" << std::endl; // 디버깅 메시지
+//    TextTable table(8, 8);
+//    std::string* example = new std::string("Hello World");
+//    table.reg_cell(new StringCell(example), "B2");
+
+//    while (1)
+//    {
+//        std::cout << table << std::endl;
+
+//        std::string location;
+//        std::string value;
+
+//        std::cout << "Please enter the cell location (e.g., A1, C5) where you would like to input the data. : \n";
+//        if (!(std::cin >> location) || !isValidCellReference(location))
+//        {
+//            std::cerr << "Invalid cell location. Please enter a valid cell reference (e.g., A1, C5)." << std::endl;
+//            std::cin.clear();
+//            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+//            continue;
+//        }
+
+//        std::cout << "input value: ";
+//        if (!(std::cin >> value))
+//        {
+//            std::cerr << "Invalid input for value. Please enter a valid string." << std::endl;
+//            std::cin.clear();
+//            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+//            continue;
+//        }
+      
+//        // value를 new로 초기화 하지 않으면.. 입력 받은 값은 이 함수의 지역 변수로서 소멸되기때문에 의미없는 값을 가리키는 포인터만 남는다.
+//        Cell* cell;
+//        std::string data_type = identify_data_type(value);
+//        if(data_type == "int") {
+//          std::istringstream iss(value);
+//          int intValue;
+//          iss >> intValue;
+//          int* cell_data = new int(intValue);
+//          cell = new NumberCell(cell_data);
+//        } else if(data_type == "date") {
+//          cell = new DateCell(convertToTimeT(value));
+//        } else {
+//          cell = new StringCell(new std::string(value));
+//        }
+//        table.reg_cell(cell, location);
+//    }
+
+//    return 0;
+//}
 
 bool isValidCellReference(const std::string& input) {
     // ^[A-Za-z]+[0-9]+$:

@@ -78,16 +78,19 @@ class NumStack {
   ~NumStack();
 };
 
+class Table;
+
+std::ostream& operator<<(std::ostream& o, Table& table);
 class Cell {
   protected:
     int x,y;
-    Table* table;
+    MyExcel::Table* table;
     string data;
   public:
     virtual string stringify();
     virtual int to_numeric();
 
-    Cell(string data, int x, int y, Table* table);
+    Cell(string data, int x, int y, MyExcel::Table* table);
 };
 
 class Table{
@@ -119,6 +122,6 @@ class TxtTable: public Table {
 
     // 텍스트로 표를 깨끗하게 출력해준다.
     string print_table();
-}
-}
+};
+};
 #endif

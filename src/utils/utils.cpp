@@ -86,7 +86,6 @@ NumStack::~NumStack() {
   }
 }
 
-
 Cell::Cell(string data, int x, int y, Table* table)
   : data(data), x(x), y(y), table(table) {}
 
@@ -107,7 +106,7 @@ Table::Table(int max_row_size, int max_col_size)
 
 Table::~Table() {
   for (int i = 0; i < max_row_size; i++) {
-    for (int i = 0; i < max_col_size; i++) {
+    for (int j = 0; j < max_col_size; j++) {
       if(data_table[i][j]) delete data_table[i][j];
     }
   }
@@ -161,7 +160,8 @@ string Table::stringify(int row, int col) {
   }
   return "";
 }
-std::ostream& operator<<(std::stream& o, Table& table) {
+
+std::ostream& operator<<(std::ostream& o, Table& table) {
   o << table.print_table();
   return o;
 }
@@ -178,8 +178,6 @@ string TxtTable::print_table() {
   for (int i = 0; i < max_col_size; i++) {
     unsigned int max_wide = 2; // 최대 넓이 2
     for (int j = 0; j < max_row_size; j++) { // 행을 순회 한다.
-
-
       if (data_table[j][i] && // 데이터가 있으면서
           data_table[j][i]->stringify().length() > max_wide // 최대 넓이보다 길다면
           ) {
@@ -190,10 +188,61 @@ string TxtTable::print_table() {
   }
 
   // 맨 상단에 열 정보 표시
-  total_table += "    ";
-  int total_wide = 4;
-  for (int i = 0; i < max_col_size; i++) {
-    //if()
+  total_table += "    "; // 모서리 공백
+  int total_wide = 4;  // 엑셀 넓이?
+  for (int i = 0; i < max_col_size; i++) { // 열 개수만큼 순회한다.
+    if(col_max_wide[i]) { // 각 열의 크기
+      int max_len = std::max(2, col_max_wide[i]); // 2칸 혹은 현재 열 길이
+      total_table += " | " + col_num_to_str(i); // 알파벳 추가
+      total_table += repeat_char(max_len - col_num_to_str(i).length(), ' '); // 컬럼 길이 - 알파벳 길이 만큼 공백 추가
+
+      total_wide += (max_len + 3); // 컬럼 길이 + 3만큼 엑셀 넓이를 늘린다.
+    }
   }
+
+  total_table += "\n"; // 한칸 내리고
+  for (int i = 0; i < max_row_size; i++) { // 행 수만큼 순회한다.
+    total_table += repeat_char(total_wide, '-'); // 엑셀 넓이만큼 '-' 추가
+    total_table += "\n" + std::to_string(i + 1); // 한칸 내리고, 행 번호 입력
+    total_table += repeat_char(4 - std::to_string(i + 1).length(), ' '); // 행 번호 길이만큼 빼고 공백 처리
+
+    for (int j = 0; j < max_col_size; j++) { // 열 수만큼 순회한다.
+      if (col_max_wide[i]) { // 각 열의 크기
+        int max_len = std::max(2, col_max_wide[j]); // 2칸 혹은 현재 열의 길이
+        string s = "";
+        if (data_table[i][j]) { // 데이터가 있으면
+          s = data_table[i][j]->stringify(); // 데이터로 치환
+        }
+        total_table += " | " + s; // 셀에 데이터 입력
+        total_table += repeat_char(max_len - s.length(), ' '); // 최대 길이에서 현재 글자수 길이 뺀 만큼 공백 추가
+      }
+    }
+    total_table += "\n"; // 한칸 내리고
+  }
+
+  return total_table;
+}
+
+string TxtTable::repeat_char(int n, char c) {
+  string s = "";
+  for (int i = 0; i < n; i++) s.push_back(c);
+  
+  return s;
+}
+
+// 숫자로 된 열 번호를 A, B, .... Z, AA, AB, ... 이런 순으로 매겨준다.
+string TxtTable::col_num_to_str(int n) {
+  string s = "";
+  if (n < 26) {
+    s.push_back('A' + n);
+  } else {
+    char first = 'A' + n / 26 - 1;
+    char second = 'A' + n % 26;
+
+    s.push_back(first);
+    s.push_back(second);
+  }
+
+  return s;
 }
 }
