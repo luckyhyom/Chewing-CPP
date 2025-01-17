@@ -85,13 +85,39 @@ class Cell {
   protected:
     int x,y;
     MyExcel::Table* table;
-    string data;
   public:
-    virtual string stringify();
-    virtual int to_numeric();
+    virtual string stringify() = 0;
+    virtual int to_numeric() = 0;
 
-    Cell(string data, int x, int y, MyExcel::Table* table);
+    Cell(int x, int y, MyExcel::Table* table);
 };
+
+class StringCell : public Cell {
+  string data;
+  public:
+    string stringify();
+    int to_numeric();
+
+    StringCell(string data, int x, int y, Table* t);
+};
+
+class NumberCell : public Cell {
+  int data;
+  public:
+    string stringify();
+    int to_numeric();
+
+    NumberCell(int data, int x, int y);
+}
+
+class DateCell : public Cell {
+  time_t data;
+  public:
+    string stringify();
+    int to_numeric();
+    
+    DateCell(string s, int x, int y, Table* t);
+}
 
 class Table{
   protected:

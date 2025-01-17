@@ -86,11 +86,52 @@ NumStack::~NumStack() {
   }
 }
 
-Cell::Cell(string data, int x, int y, Table* table)
-  : data(data), x(x), y(y), table(table) {}
+Cell::Cell(int x, int y, Table* table) : x(x), y(y), table(table) {}
 
-string Cell::stringify() { return data; }
-int Cell::to_numeric() { return 0; }
+
+StringCell::StringCell(string data, int x, int y, Table* t)
+  : data(data), Cell(x, y, t) {}
+string StringCell::stringify() { return data; }
+int StringCell::to_numeric() { return 0; }
+
+NumberCell::NumberCell(int data, int x, int y, Table* t)
+  : data(data), Cell(x, y, t) {}
+string NumberCell::stringify() { return std::to_string(data); }
+int NumberCell::to_numeric() { return data; }
+
+
+string DateCell::stringify() { return 
+  char buf[50];
+  tm temp;
+  // cppcheck-suppress uninitvar
+  localtime_s(&temp, &data); // int 자료형으로 저장된 시간 데이터를 tm 구조체에 맞게 변환한다.
+
+  strftime(buf, 50, "%F", &temp); // tm 구조체의 데이터를 yyyy-mm-dd 꼴로 변환
+
+  return string(buf); // std::string 자료형으로 변환한다.
+}
+int DateCell::to_numeric() { return static_cast<int>(data); }
+
+DateCell::DateCell(string data, int x, int y, Table* t)
+  : data(data), Cell(x, y, t) {
+    // 입력받는 Date 형식은 항상 yyyy-mm-dd 꼴이라 가정한다.
+    int year = atoi(s.c_str());
+    int month = atoi(s.c_str() + 5);
+    int day = atoi(s.c_str() + 8);
+
+    // 시간 데이터 구조체
+    tm timeinfo;
+
+    timeinfo.tm_year = year - 1900;
+    timeinfo.tm_mon = month - 1;
+    timeinfo.tm_day = day;
+    timeinfo.tm_hour = 0;
+    timeinfo.tm_min = 0;
+    timeinfo.tm_sec = 0;
+
+    // 시간 데이터 구조체 데이터를 int 자료형으로 변환한다.
+    data = mktime(&timeinfo);
+}
 
 Table::Table(int max_row_size, int max_col_size)
     : max_row_size(max_row_size), max_col_size(max_col_size) {
