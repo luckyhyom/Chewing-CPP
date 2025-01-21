@@ -15,6 +15,9 @@ include_directories(${CMAKE_SOURCE_DIR}/include/core)
 include_directories(${CMAKE_SOURCE_DIR}/include/table)
 include_directories(${CMAKE_SOURCE_DIR}/include/utils)
 
+# fatal error: 'string' file not found -> #include <string>
+include_directories("/opt/homebrew/opt/llvm/include/c++/v1")
+
 # ------------------------------------------------------------------------------
 # 라이브러리 소스 수집 (main.cpp는 제외)
 # ------------------------------------------------------------------------------

@@ -1,6 +1,5 @@
 #ifndef UTILS_H
 #define UTILS_H
-
 #include <string>
 using std::string;
 
@@ -90,6 +89,7 @@ class Cell {
     virtual int to_numeric() = 0;
 
     Cell(int x, int y, MyExcel::Table* table);
+    virtual ~Cell() = default; // 가상 소멸자
 };
 
 class StringCell : public Cell {
@@ -107,8 +107,8 @@ class NumberCell : public Cell {
     string stringify();
     int to_numeric();
 
-    NumberCell(int data, int x, int y);
-}
+    NumberCell(int data, int x, int y, Table* t);
+};
 
 class DateCell : public Cell {
   time_t data;
@@ -117,11 +117,11 @@ class DateCell : public Cell {
     int to_numeric();
     
     DateCell(string s, int x, int y, Table* t);
-}
+};
 
 class ExprCell : public Cell {
   string data;
-  string* parsed_expr;
+  //string* parsed_expr;
 
   Vector exp_vec;
 
@@ -135,7 +135,7 @@ class ExprCell : public Cell {
     ExprCell(string data, int x, int y, Table* t);
     string stringify();
     int to_numeric();
-}
+};
 class Table{
   protected:
     int max_row_size, max_col_size;

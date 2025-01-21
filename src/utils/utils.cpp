@@ -1,5 +1,6 @@
 #include "utils.h"
 #include <string>
+#include <iostream>
 
 namespace MyExcel {
 Vector::Vector(int n) : data(new string[n]), capacity(n), length(0) {}
@@ -90,41 +91,41 @@ Cell::Cell(int x, int y, Table* table) : x(x), y(y), table(table) {}
 
 
 StringCell::StringCell(string data, int x, int y, Table* t)
-  : data(data), Cell(x, y, t) {}
+  : Cell(x, y, t), data(data) {}
 string StringCell::stringify() { return data; }
 int StringCell::to_numeric() { return 0; }
 
 NumberCell::NumberCell(int data, int x, int y, Table* t)
-  : data(data), Cell(x, y, t) {}
+  : Cell(x, y, t), data(data) {}
 string NumberCell::stringify() { return std::to_string(data); }
 int NumberCell::to_numeric() { return data; }
 
 
-string DateCell::stringify() { return 
+string DateCell::stringify() {
   char buf[50];
-  tm temp;
+  std::tm temp;
   // cppcheck-suppress uninitvar
-  localtime_s(&temp, &data); // int 자료형으로 저장된 시간 데이터를 tm 구조체에 맞게 변환한다.
+  std::localtime(&data); // int 자료형으로 저장된 시간 데이터를 tm 구조체에 맞게 변환한다.
 
-  strftime(buf, 50, "%F", &temp); // tm 구조체의 데이터를 yyyy-mm-dd 꼴로 변환
+  std::strftime(buf, 50, "%F", &temp); // tm 구조체의 데이터를 yyyy-mm-dd 꼴로 변환
 
   return string(buf); // std::string 자료형으로 변환한다.
 }
 int DateCell::to_numeric() { return static_cast<int>(data); }
 
 DateCell::DateCell(string data, int x, int y, Table* t)
-  : data(data), Cell(x, y, t) {
+  : Cell(x, y, t) {
     // 입력받는 Date 형식은 항상 yyyy-mm-dd 꼴이라 가정한다.
-    int year = atoi(s.c_str());
-    int month = atoi(s.c_str() + 5);
-    int day = atoi(s.c_str() + 8);
+    int year = atoi(data.c_str());
+    int month = atoi(data.c_str() + 5);
+    int day = atoi(data.c_str() + 8);
 
     // 시간 데이터 구조체
-    tm timeinfo;
+    std::tm timeinfo;
 
     timeinfo.tm_year = year - 1900;
     timeinfo.tm_mon = month - 1;
-    timeinfo.tm_day = day;
+    timeinfo.tm_mday = day;
     timeinfo.tm_hour = 0;
     timeinfo.tm_min = 0;
     timeinfo.tm_sec = 0;
@@ -133,11 +134,17 @@ DateCell::DateCell(string data, int x, int y, Table* t)
     data = mktime(&timeinfo);
 }
 
-ExprCell::ExprCell(string data, int x, int y, Table* t): data(data), Cell(x, y, y) {}
+ExprCell::ExprCell(string data, int x, int y, Table* t): Cell(x, y, t), data(data) {
+  parse_expression();
+}
+
+string ExprCell::stringify() {
+  return std::to_string(to_numeric());
+}
 
 // 이미 배열의 데이터는 정렬이 되어있는 상태다.
 int ExprCell::to_numeric() {
-  double result = 0;
+  //double result = 0;
   NumStack stack;
 
   // 배열의 크기만큼 순회
@@ -189,6 +196,36 @@ int ExprCell::precedence(char c) {
   return 0;
 }
 
+void ExprCell::parse_expression() {
+  Stack stack;
+
+  data.insert(0, "(");
+  data.push_back(')');
+
+  for (int i = 0; i < data.length(); i++) {
+    std::cout << data[i] << std::endl;
+    if(isalpha(data[i])) {
+      exp_vec.push_back(data.substr(i, 2));
+      i++;
+    } else if(isdigit(data[i])) {
+      exp_vec.push_back(data.substr(i, 1));
+    } else if(data[i] == '(' || data[i] == '[' || data[i] == '{') {
+      stack.push(data.substr(i, 1));
+    } else if(data[i] == ')' || data[i] == ']' || data[i] == '}') {
+      string t = stack.pop();
+      while (t != "(" && t != "[" && t != "{") {
+        exp_vec.push_back(t);
+        t = stack.pop();
+      }
+    } else if(data[i] == '+' || data[i] == '-' || data[i] == '*' || data[i] == '/') {
+      while (!stack.is_empty() && precedence(stack.peek()[0]) >= precedence(data[i]) ) {
+        exp_vec.push_back(stack.pop());
+      }
+      stack.push(data.substr(i, 1));
+    }
+  }
+}
+
 Table::Table(int max_row_size, int max_col_size)
     : max_row_size(max_row_size), max_col_size(max_col_size) {
   data_table = new Cell**[max_row_size];
@@ -231,6 +268,8 @@ int Table::to_numeric(const string& s) {
       return data_table[row][col]->to_numeric();
     }
   }
+
+  return 0;
 }
 int Table::to_numeric(int row, int col) {
   if (row < max_row_size && col < max_col_size && data_table[row][col]) {
