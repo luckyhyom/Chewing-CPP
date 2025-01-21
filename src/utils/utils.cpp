@@ -133,6 +133,62 @@ DateCell::DateCell(string data, int x, int y, Table* t)
     data = mktime(&timeinfo);
 }
 
+ExprCell::ExprCell(string data, int x, int y, Table* t): data(data), Cell(x, y, y) {}
+
+// 이미 배열의 데이터는 정렬이 되어있는 상태다.
+int ExprCell::to_numeric() {
+  double result = 0;
+  NumStack stack;
+
+  // 배열의 크기만큼 순회
+  for (int i = 0; i < exp_vec.size(); i++) {
+    string s = exp_vec[i]; // 배열
+
+    // 셀 일 경우 (A3, B2 따위) -> 이해 안됨
+    if (isalpha(s[0])) { //
+      stack.push(table->to_numeric(s));
+    } // 숫자일 경우
+    else if (isdigit(s[0])) {
+      stack.push(atoi(s.c_str()));
+    } else { // 연산자일 경우
+      double y = stack.pop(); // 
+      double x = stack.pop();
+      switch (s[0]) {
+        case '+':
+          stack.push(x + y);
+          break;
+        case '-':
+          stack.push(x - y);
+          break;
+        case '*':
+          stack.push(x * y);
+          break;
+        case '/':
+          stack.push(x / y);
+          break;
+      }
+    }
+  }
+  return stack.pop();
+}
+
+int ExprCell::precedence(char c) {
+  switch (c)
+  {
+  case '(':
+  case '[':
+  case '{':
+    return 0;
+  case '+':
+  case '-':
+    return 1;
+  case '*':
+  case '/':
+    return 2;
+  }
+  return 0;
+}
+
 Table::Table(int max_row_size, int max_col_size)
     : max_row_size(max_row_size), max_col_size(max_col_size) {
   data_table = new Cell**[max_row_size];

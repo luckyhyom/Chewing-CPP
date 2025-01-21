@@ -119,6 +119,23 @@ class DateCell : public Cell {
     DateCell(string s, int x, int y, Table* t);
 }
 
+class ExprCell : public Cell {
+  string data;
+  string* parsed_expr;
+
+  Vector exp_vec;
+
+  // 연산자 우선 순위를 반환합니다.
+  int precedence(char c);
+
+  // 수식을 분석합니다.
+  void parse_expression();
+
+  public:
+    ExprCell(string data, int x, int y, Table* t);
+    string stringify();
+    int to_numeric();
+}
 class Table{
   protected:
     int max_row_size, max_col_size;
