@@ -166,5 +166,15 @@ class TxtTable: public Table {
     // 텍스트로 표를 깨끗하게 출력해준다.
     string print_table();
 };
+
+class Excel {
+  Table* current_table;
+  public:
+    Excel(int max_row, int max_col, int choice);
+
+    int parse_user_input(string s);
+    void command_line();
+};
+
 };
 #endif

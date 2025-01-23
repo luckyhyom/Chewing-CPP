@@ -1,6 +1,7 @@
 #include "utils.h"
 #include <string>
 #include <iostream>
+#include <fstream>
 
 namespace MyExcel {
 Vector::Vector(int n) : data(new string[n]), capacity(n), length(0) {}
@@ -380,5 +381,81 @@ string TxtTable::col_num_to_str(int n) {
   }
 
   return s;
+}
+
+Excel::Excel(int max_row, int max_col, int choice = 0) {
+  switch (choice)
+  {
+  case 0:
+    current_table = new TxtTable(max_row, max_col);
+    break;
+  case 1:
+    current_table = new TxtTable(max_row, max_col);
+    break;
+  default:
+    current_table = new TxtTable(max_row, max_col);
+    break;
+  }
+}
+
+int Excel::parse_user_input(string s) {
+  int next = 0;
+  string command = "";
+
+  size_t space_pos = s.find(' ');
+  if (space_pos != std::string::npos) {
+    command = s.substr(0, space_pos);
+    next = space_pos + 1;
+  } else {
+    command = s;
+    next = s.length();
+  }
+
+  std::cout << command << std::endl;
+
+
+  string to = "";
+  size_t next_space_pos = s.find(' ', next);
+  if (next_space_pos != std::string::npos) {
+    to = s.substr(next, next_space_pos - next);
+    next = next_space_pos + 1;
+  } else {
+    to = s.substr(next);
+    next = s.length();
+  }
+
+  // Cell 이름으로 받는다.
+  int col = to[0] - 'A';
+  int row = atoi(to.c_str() + 1) - 1;
+
+  string rest = s.substr(next);
+
+  if (command == "sets") {
+    current_table->reg_cell(new StringCell(rest, row, col, current_table), row, col);
+  } else if (command == "setn") {
+    current_table->reg_cell(new NumberCell(atoi(rest.c_str()), row, col, current_table), row, col);
+  } else if (command == "setd") {
+    current_table->reg_cell(new DateCell(rest, row, col, current_table), row, col);
+  } else if (command == "sete") {
+    current_table->reg_cell(new ExprCell(rest, row, col, current_table), row, col);
+  } else if (command == "out") {
+    std::ofstream out(to);
+    out << *current_table;
+    std::cout << to << " 에 내용이 저장되었습니다" << std::endl;
+  } else if (command == "exit") {
+    return 0;
+  }
+  
+  return 1;
+}
+
+void Excel::command_line() {
+  string s;
+  std::getline(std::cin, s);
+
+  while (parse_user_input(s)) {
+    std::cout << *current_table << std::endl << ">> ";
+    getline(std::cin, s);
+  }
 }
 }
