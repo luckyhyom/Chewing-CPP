@@ -2,8 +2,14 @@
 #include <string>
 
 template <typename T>
+struct Compare {
+  bool operator()(const T& a, const T& b) const { return a > b; }
+};
+
+template <typename T, typename Comp = Compare<T> >
 T max(T& a, T& b) {
-  return a > b ? a : b;
+  Comp comp;
+  return Comp(a, b) ? a : b;
 }
 
 int main() {
