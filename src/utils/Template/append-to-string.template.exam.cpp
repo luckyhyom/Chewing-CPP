@@ -9,6 +9,11 @@ size_t GetStringSize(const std::string& s) {
   return s.size();
 }
 
+template <typename String, typename... Strings>
+size_t GetStringSize(const String& s, Strings... strs) {
+  return GetStringSize(s) + GetStringSize(strs...);
+}
+
 
 /**
  * 오버로딩된 템플릿 함수
