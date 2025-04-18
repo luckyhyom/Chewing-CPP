@@ -2,6 +2,9 @@
 #include <string>
 #include <iostream>
 
+/**
+ * 문제는, cpp는 알고리즘을 수정하기 위해서 어느 메서드를 수정해야하는지 파악하기가 비교적 쉽지 않은 것 같음
+ */
 struct my_char_traits : public std::char_traits<char> {
     static int get_real_rank(char c) {
       if (isdigit(c)) {
@@ -28,6 +31,11 @@ struct my_char_traits : public std::char_traits<char> {
       return 0;
     }
 };
+
+void* operator new(size_t count) {
+  std::cout << count << "byte 할당" << std::endl;
+  return malloc(count);
+}
 
 int main() {
   std::string a = "1a";
