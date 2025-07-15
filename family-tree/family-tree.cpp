@@ -8,7 +8,7 @@
  *     자식
  */
 
-class Member {
+class Member : public std::enable_shared_from_this<Member> {
 private:
   std::vector<std::shared_ptr<Member>> children; 
   std::vector<std::weak_ptr<Member>> parents;
@@ -20,6 +20,19 @@ public:
   void AddChild(const std::shared_ptr<Member>& child);
 };
 
+void Member::AddParent(const std::shared_ptr<Member>& parent) {
+  this->parents.emplace_back(parent);
+  parent->AddChild(shared_from_this());
+}
+void Member::AddSpouse(const std::shared_ptr<Member>& spouse) {
+  this->spouse.emplace_back(spouse);
+  spouse->AddSpouse(shared_from_this());
+}
+void Member::AddChild(const std::shared_ptr<Member>& child) {
+  this->children.emplace_back(child);
+  child->AddParent(shared_from_this());
+}
+
 class FamilyTree {
 private:
   std::vector<std::shared_ptr<Member>> entire_family;
@@ -29,24 +42,19 @@ public:
   int CalculateChon(Member* mem1, Member* mem2);
 };
 
-
+// [1]    98936 segmentation fault  "/Users/hyomin/Desktop/Programing/Chewing-CPP/family-tree/"family-tree
 int main() {
-  //Member m1; // me
-  //Member m2; // wife
-  //Member m3; // mother
-  //Member m4; // father
-  //Member m5; // sun
-  //Member m6; // daughter
-
-  // 본체가 있어야하는 것 아닌가? 포인터만 만드는게 아닌가?
   std::shared_ptr<Member> m1 = std::make_shared<Member>();
   std::shared_ptr<Member> m2 = std::make_shared<Member>();
-
+  std::shared_ptr<Member> m3 = std::make_shared<Member>();
+  std::shared_ptr<Member> m4 = std::make_shared<Member>();
+  std::shared_ptr<Member> m5 = std::make_shared<Member>();
+  std::shared_ptr<Member> m6 = std::make_shared<Member>();
   m1->AddSpouse(m2);
-  //m1.AddParent(m3);
-  //m1.AddParent(m4);
-  //m1.AddChild(m5);
-  //m1.AddChild(m6);
+  m1->AddParent(m3);
+  m1->AddParent(m4);
+  m1->AddChild(m5);
+  m1->AddChild(m6);
 
   return 0;
 }
