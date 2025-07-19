@@ -25,6 +25,13 @@ void Member::AddParent(const std::shared_ptr<Member>& parent) {
   parent->AddChild(shared_from_this());
 }
 void Member::AddSpouse(const std::shared_ptr<Member>& spouse) {
+  for (auto& wk : this->spouse) {
+    std::shared_ptr<Member> a = wk.lock();
+    if(a && a.get() == spouse.get()) {
+      return;
+    }
+  }
+
   this->spouse.emplace_back(spouse);
   spouse->AddSpouse(shared_from_this());
 }
@@ -42,7 +49,6 @@ public:
   int CalculateChon(Member* mem1, Member* mem2);
 };
 
-// [1]    98936 segmentation fault  "/Users/hyomin/Desktop/Programing/Chewing-CPP/family-tree/"family-tree
 int main() {
   std::shared_ptr<Member> m1 = std::make_shared<Member>();
   std::shared_ptr<Member> m2 = std::make_shared<Member>();
