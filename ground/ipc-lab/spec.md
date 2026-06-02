@@ -153,9 +153,11 @@ MQTT 신호(M8) → HTTP 다운로드(M7) → JSON 파일 생성(M3)
             → IPC 알림(M5) → VDC가 읽어 적용(M6)
 ```
 
+> **전체 VCRM 메커니즘까지 확장하는 방향(M10~M20)** 은 별도 문서 [spec-extended.md](spec-extended.md)에 정리되어 있다. 지금 구현 범위는 M0~M9이며, 필요해지면 확장판을 꺼내 plan/tasks로 펼친다.
+
 ## 7. 범위 밖 (Out of Scope)
 
-- 실제 차량 데이터 수집 파이프라인(Receiver~Transmission 6레이어)
+- 실제 차량 데이터 수집 파이프라인(Receiver~Transmission 6레이어) — [spec-extended.md](spec-extended.md)의 M10+에서 다룬다
 - 전자서명(private/public key) 검증 — checksum(SHA256)까지만 다룬다
 - 멀티 Policy Type 동시 운용의 완전한 구현 — hot swap 개념 검증까지만
 - 프로덕션 수준의 에러 복구·재연결 — 학습에 필요한 만큼만
